@@ -13,9 +13,9 @@ The tool broadly replicates the functionality and layout of the discontinued int
 * [Usage](#usage)
     * [Login](#login)
         * [Identity and Access Management](#identity-and-access-management-iam)
-    * [Create HIT (Amaril)](#create-hit)
-        * [Template HIT props](#hit-props)
-        * [Template UX props](#ux-props)
+    * [Create HIT](#create-hit)
+        * [HIT](#hit)
+        * [UX](#ux)
     * [Manage HITs](#manage-hits)
         * [Finding & Viewing](#finding--viewing-tasks)
         * [Multi-HIT Actions](#multi-hit-actions)
@@ -81,18 +81,17 @@ If you do not intend to use the interface to modify HITs or assignments in any w
 
 * Note: your IAM user must be  using the 2017 version of the `AmazonMechanicalTurkReadOnly` policy (or newer) to allow the `ListHits` permission.
 
-## Create HIT (Amaril)
+## Create HIT 
 you may create a hit choosing a template from the templates bucket at :
 https://console.aws.amazon.com/s3/buckets/amaril-mturk-tamplates/?region=eu-west-1&tab=overview
 (you may upload your own HIT template file to amazon s3 bucket)
 
 the template file defines the following properties:
 
-### Template HIT props  
+### HIT
 see docs at : https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_CreateHITOperation.html#ApiReference_CreateHITOperation-request-parameters
 
-### Template UX props
-
+### UX
 - 'Category' - defines the instructions category, 
     possible values are: animals,events,individuals,wars,innovations.
 
