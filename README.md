@@ -13,6 +13,7 @@ The tool broadly replicates the functionality and layout of the discontinued int
 * [Usage](#usage)
     * [Login](#login)
         * [Identity and Access Management](#identity-and-access-management-iam)
+    * [Create HIT](#create-hit)
     * [Manage HITs](#manage-hits)
         * [Finding & Viewing](#finding--viewing-tasks)
         * [Multi-HIT Actions](#multi-hit-actions)
@@ -78,6 +79,58 @@ If you do not intend to use the interface to modify HITs or assignments in any w
 
 * Note: your IAM user must be  using the 2017 version of the `AmazonMechanicalTurkReadOnly` policy (or newer) to allow the `ListHits` permission.
 
+## Amaril Create HIT
+you may create a hit choosing a template from the templates bucket at :
+https://console.aws.amazon.com/s3/buckets/amaril-mturk-tamplates/?region=eu-west-1&tab=overview
+(you may upload your own HIT template file to amazon s3 bucket)
+
+the template file defines the following properties:
+
+1) HIT props:  see docs at : https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_CreateHITOperation.html#ApiReference_CreateHITOperation-request-parameters
+
+2) Amaril App, User-Experience props:
+
+- 'Category' - defines the instructions category, 
+    possible values are: animals,events,individuals,wars,innovations.
+
+- 'ExperimentName' this defines the parent folder under which the HIT's audio files are saved.
+    the audio file is saved in a folder as follows : 
+    'ExperimentName/hitId/assignmentId/workerId_sampleRate.flac'
+
+- 'DevEnv' - defines the bucket in which the files are saved:
+    dev: 'recording_test_dev'  
+    prod: 'recordings_test'
+
+- 'DelayDuration' - defines the time in seconds in which the user is exposed to the instructions (of a specific category)
+
+- 'AskRecordingDuration' - defines whether or not the user is asked for his percieved experiment duration at the end of the experiment.
+
+- 'EnforceOnMobile' - whether or not the user is able to access this HIT's assignments from a desktop browser.
+
+(*) here is an example JSON file:  "template.example.json":
+{
+    "ux":{
+        "Category":"events",
+        "ShowTestDuration":"no",
+        "RecordingDuration":"60",
+        "DelayDuration":"6",
+        "ExperimentName":"my-experiment",
+        "AskRecordingDuration":"yes",
+        "DevEnv":"no",
+        "EnforceOnMobile":"yes"
+    },
+    "hit":{
+        "MaxAssignments" : "3",
+        "AutoApprovalDelayInSeconds" : "259200",
+        "LifetimeInSeconds" : "172800", 
+        "AssignmentDurationInSeconds" : "5400", 
+        "Reward" : "0.0",
+        "Title" : "Testing7",
+        "Keywords" : "data entry, typing, inspection",
+        "Description" : "Edit and Add Data from recording"
+    }
+}
+    
 ## Manage HITs
 Once you have logged in, the console lists all HITs currently available for the requester.
 
