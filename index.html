@@ -43,7 +43,12 @@
   <script
     src="https://cdn.jsdelivr.net/npm/alasql@0.4.5/dist/alasql.min.js"
     integrity="sha512-wqn/K+yM6of5EGolrggvJeDH/VO/LSj5Tm55osVBMGrRxEhZ/cp7DqhHdbh+IEx6qNTm7vLKO0Bc8SphAjCINA=="
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous">
+  </script>
+
+  <script type="text/javascript" 
+    src="https://cdn.jsdelivr.net/npm/async@2.6.2/dist/async.min.js">
+  </script>
   <script>
     // simple conversion function for csv export
     function exportData(file, rows) {
@@ -539,11 +544,14 @@
 
   <script>
 
-    // global variables
-    var __session = [];
+    // const:
     var AMARIL_APP_BASE_URL = 'https://d7zi6ylvgz8m9.cloudfront.net/';
     var AMARIL_APP_BASE_SANDBOX_URL = 'https://d7zi6ylvgz8m9.cloudfront.net/';
     var AMARIL_SANDBOX_DIRECTORY_PREFIX = "Sandbox__"
+
+    // global variables
+    var __session = [];
+    var __templates = {}
 
     // how often to refresh cached data from api, in ms
     __session['refresh-freq'] = 5 * 60 * 1000;
@@ -1531,9 +1539,6 @@
       return QualificationRequirement;
     }
 
-    // ******** 
-    // TBD: load templates from s3.
-
     // create HIT
     // params: templateId, , [ShowDialog: true]
     function reqCreateHIT(data) {
@@ -1597,7 +1602,6 @@
         return;
       }
     }
-    // ********
 
     // create task
     // params: Title, Description, Keywords, Reward, MaxAssignments, AssignmentDurationInSeconds, LifetimeInSeconds, Question, [QualificationRequirements []], [AutoApprovalDelayInSeconds null]
@@ -2282,7 +2286,7 @@
     }
 
     function getTemplateConfig(configFilename) {
-
+/*
       var config = {
             ux:{
                 Category:"events",
@@ -2305,20 +2309,9 @@
                 Description : "Edit and Add Data from recording",
             }
       }
-
-      return config
+*/
+      return __templates[configFilename]
     }
-
-    function createQuestion(config){
-
-    }
-
-    function createHIT(config,question){
-
-    }
-
-    function handleCreateHIT(event) {
-    } 
 
     // set login values
     function setLogin(event) {
@@ -2326,8 +2319,8 @@
       __session['time-format'] = parseInt($('#login-time-format').val());
 
       // get AWS Keys:
-      var accessKeyId  =  $('#login-aws-accessKeyId').val()
-      var secretAccessKey = $('#login-aws-secretAccessKey').val(),
+      var accessKeyId  = $('#login-aws-accessKeyId').val()
+      var secretAccessKey = $('#login-aws-secretAccessKey').val()
 
       // configure api
       var config = new AWS.Config({
@@ -2350,6 +2343,54 @@
       }
 
       updateMode('list');
+
+      getTemplates()
+    }
+
+    function getTemplates(){
+      var s3 =  new AWS.S3();
+
+      var params = {
+        Bucket: "amaril-mturk-tamplates", 
+      };
+
+      s3.listObjects(params, function(err, data){
+        if (err) {
+          return console.log(err);
+        }
+
+        async.eachSeries(data.Contents, function(fileObj, callback){
+          var key = fileObj.Key;
+
+          var fileParams = {
+            Bucket: params.Bucket,
+            Key: key
+          }
+
+          s3.getObject(fileParams, function(err, fileContents){
+            if (err) {
+              callback(err);
+            } else {
+              // Read the file
+              var contents = fileContents.Body.toString();
+              var filename = key.split('.').slice(0, -1).join('.')
+              
+              // add to templates dropdown menu:
+              $('#createHIT-template-id').append($('<option>', {value:filename, text:filename})); 
+              $('#createHIT-template-id').val(filename);
+              __templates[filename] = JSON.parse(contents)
+
+              callback();
+            }
+          });
+        }, function(err) {
+          if (err) {
+            console.log('Failed: ' + err);
+          } else {
+            console.log('Finished');
+          }
+        });
+      });
     }
 
     // manage hits
@@ -3276,9 +3317,7 @@
         <form>
           <label for="createHIT-template-id">Select Template</label>
           <select id="createHIT-template-id" name="createHIT-template-id">
-            <option value="templateId1">templateId1</option>
-            <option value="templateId2" selected="selected">templateId2</option>
-            <option value="templateId3">templateId3</option>
+          
           </select>
         </form>
         <div>
