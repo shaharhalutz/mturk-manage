@@ -93,7 +93,12 @@ see docs at : https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiRefe
 
 ### UX
 - 'Category' - defines the instructions category, 
-    possible values are: animals,events,individuals,wars,innovations.
+    possible values are: 
+    - 'animals': animal names
+    - 'events': historical events throughout american history
+    - 'individuals': individuals throughout american history
+    - 'wars': wars throughout history
+    - 'innovations': technological innovations throughout american history
 
 - 'ExperimentName' this defines the parent folder under which the HIT's audio files are saved.
     the audio file is saved in a folder as follows : 
