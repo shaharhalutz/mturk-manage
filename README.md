@@ -91,6 +91,16 @@ the template file defines the following properties:
 ### HIT
 see docs at : https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_CreateHITOperation.html#ApiReference_CreateHITOperation-request-parameters
 
+- Qualification Requirements: 
+    - Locale Requirement: 
+    you may filter workers to certain countries.
+    params:
+        - "locals" : array of country codes, you may obtain country code  here:
+            https://www.iso.org/iso-3166-country-codes.html
+        - "actionsGuarded" : actions that the workers which do NOT qualify, can Not do: possible values: "PreviewAndAccept" , "DiscoverPreviewAndAccept", "Accept"
+
+(docs:https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_QualificationRequirementDataStructureArticle.html)
+
 ### UX
 - 'Category' - defines the instructions category, 
     possible values are: 
@@ -134,7 +144,14 @@ see docs at : https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiRefe
         "Reward" : "0.0",
         "Title" : "Testing7",
         "Keywords" : "data entry, typing, inspection",
-        "Description" : "Edit and Add Data from recording"
+        "Description" : "Edit and Add Data from recording",
+        "QualificationRequirements":
+            {
+                "Locale":{
+                    "locals":["ES","US"],
+                    "actionsGuarded":"PreviewAndAccept"
+                }
+            }
     }
 }
     
