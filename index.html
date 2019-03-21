@@ -1560,6 +1560,54 @@
       return url
     }
 
+    function generateLocaleQualification(locals,actionsGuarded){
+
+      if(!actionsGuarded){
+        console.log('generateLocaleQualification: actionsGuarded is null falling back to defualt - PreviewAndAccept ')
+        actionsGuarded = "PreviewAndAccept"
+      }
+
+      var localeQual = {
+        
+          QualificationTypeId:"00000000000000000071",
+          Comparator:"In",
+          LocaleValues:[],
+          ActionsGuarded: actionsGuarded
+      }
+      // sanity:
+      if(!locals || locals.length == 0){
+        console.error('Tamplete validation error : localQualification exists but no locale strings in file')
+        return null;
+      }
+       
+      // generate LocalValues:
+      for (let index = 0; index < locals.length; index++) {
+        const localStr = locals[index];
+        localeQual.LocaleValues.push({
+          Country:localStr,
+        })
+      }
+      return localeQual;
+    }
+
+    function generateQualificationRequirements(qualificationRequirements) {
+      requirements= []
+      if(!qualificationRequirements){
+        return requirements
+      }
+
+      if(qualificationRequirements.Locale){
+        var localReq = generateLocaleQualification(qualificationRequirements.Locale.locals,
+                                    qualificationRequirements.Locale.actionsGuarded)
+        
+        if(localReq){
+          requirements.push(localReq)
+
+        }
+      }
+      return requirements 
+    }
+
     // create external question xml
     function generateExternalQuestion(url, height) {
       height = parseInt(height) ? parseInt(height) : 950;
@@ -1682,7 +1730,7 @@
             AssignmentDurationInSeconds: data.params.hit.AssignmentDurationInSeconds, // 1 min
             LifetimeInSeconds: data.params.hit.LifetimeInSeconds, // 30 days,
             Question: generateExternalQuestion(url),
-            QualificationRequirements: null,
+            QualificationRequirements: generateQualificationRequirements(data.params.hit.QualificationRequirements),
             AutoApprovalDelayInSeconds: data.params.hit.AutoApprovalDelayInSeconds
         };
         req(data, reqCreateHIT, reqCreateTask, params);
@@ -1710,7 +1758,7 @@
           AssignmentDurationInSeconds: data.params.AssignmentDurationInSeconds,
           LifetimeInSeconds: data.params.LifetimeInSeconds,
           Question: data.params.Question,
-          //TBD:QualificationRequirements: data.params.QualificationRequirements,
+          QualificationRequirements:data.params.QualificationRequirements,
           AutoApprovalDelayInSeconds: data.params.AutoApprovalDelayInSeconds
       };
       var datain = data;
@@ -2406,7 +2454,7 @@
       __session['time-format'] = parseInt($('#login-time-format').val());
 
       // get AWS Keys:
-      var accessKeyId  = $('#login-aws-accessKeyId').val()
+      var accessKeyId  =  $('#login-aws-accessKeyId').val()
       var secretAccessKey = $('#login-aws-secretAccessKey').val()
 
       // configure api
