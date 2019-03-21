@@ -89,7 +89,6 @@ https://console.aws.amazon.com/s3/buckets/amaril-mturk-tamplates/?region=eu-west
 the template file defines the following properties:
 
 ### HIT
-see docs at : https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_CreateHITOperation.html#ApiReference_CreateHITOperation-request-parameters
 
 - Qualification Requirements: 
     - Locale Requirement: 
@@ -99,7 +98,7 @@ see docs at : https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiRefe
             https://www.iso.org/iso-3166-country-codes.html
         - "actionsGuarded" : actions that the workers which do NOT qualify, can Not do: possible values: "PreviewAndAccept" , "DiscoverPreviewAndAccept", "Accept"
 
-(docs:https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_QualificationRequirementDataStructureArticle.html)
+
 
 ### UX
 - 'Category' - defines the instructions category, 
