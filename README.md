@@ -125,6 +125,7 @@ see create HIT docs at: https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkA
 - 'EnforceOnMobile' - whether or not the user is able to access this HIT's assignments from a desktop browser.
 
 (*) here is an example JSON file:  "template.example.json":
+```javascript
 {
     "ux":{
         "Category":"events",
@@ -154,6 +155,7 @@ see create HIT docs at: https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkA
             }
     }
 }
+```
     
 ## Manage HITs
 Once you have logged in, the console lists all HITs currently available for the requester.
