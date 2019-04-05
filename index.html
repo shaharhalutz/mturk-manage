@@ -1767,6 +1767,31 @@
           showMessage('API Error', err.message, err);
           return;
         } else {
+
+          // subscribe topic to AssignmentSubmit event :
+          var HITTypeId = data.HIT.HITTypeId
+
+          var params = {
+            HITTypeId: HITTypeId, 
+            Active: true,
+            Notification: {
+              Destination: 'arn:aws:sns:eu-west-1:022434321651:AssignmentSubmitted', // required 
+              EventTypes: [   
+                'AssignmentSubmitted' // | AssignmentAbandoned | AssignmentReturned | AssignmentSubmitted | AssignmentRejected | AssignmentApproved | HITCreated | HITExpired | HITReviewable | HITExtended | HITDisposed | Ping,
+              ],
+              Transport: 'SNS',
+              Version: '2014-08-15' 
+            }
+          };
+          __session['mturk'].updateNotificationSettings(params, function(err, notificationData) {
+            if (err){
+              console.log('updateNotificationSettings:error',err, err.stack); // an error occurred
+            } 
+            else{
+              console.log('updateNotificationSettings:success:',notificationData);           // successful response
+            }  
+          }); 
+          
           // return data, using callback
           ret(datain, data);
           return;
