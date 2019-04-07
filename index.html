@@ -1517,7 +1517,7 @@
     }
 
     // create external question xml
-    function generateAmarilAppURL(ux) {
+    function generateAmarilAppURL(ux,platform) {
 
       var isSandbox = false;
       if($('#login-aws-endpoint').val().indexOf('sandbox') > -1) {
@@ -1529,6 +1529,7 @@
         url = AMARIL_APP_BASE_SANDBOX_URL;
       }
 
+/*
       paramDict = {
         'Category':'CATEGORY',
         'RecordingDuration':'REC_DURATION',
@@ -1539,7 +1540,7 @@
         'DevEnv':'DEV_ENV',
         'EnforceOnMobile':'ENFORCE_ON_MOBILE'
       }
-
+*/
       var uxParams = Object.keys(ux)
       if(uxParams.length){
         url += '?'
@@ -1547,14 +1548,24 @@
 
       for(paramIndx in uxParams){
         var paramKey = uxParams[paramIndx];
-        var PARAM = paramDict[paramKey];
+        //var PARAM = paramDict[paramKey];
         var paramValue = ux[paramKey]
 
         // add sandbox prefix:
-        if( isSandbox &&  PARAM == 'EXP_NAME'){
+        if( isSandbox &&  paramKey == 'ExperimentName'){
           paramValue = AMARIL_SANDBOX_DIRECTORY_PREFIX + paramValue;
         }
-        url += PARAM+'='+paramValue + '&amp;'
+        url += paramKey + '=' + paramValue + '&amp;'
+      }
+
+      if(platform){
+        var platformParams = Object.keys(platform)
+
+        for(paramIndx in platformParams){
+          var paramKey = platformParams[paramIndx];
+          var paramValue = platform[paramKey];
+          url += paramKey+'='+paramValue + '&amp;'
+        }
       }
 
       return url
@@ -1718,8 +1729,7 @@
         return;
       } else {
 
-        var url = generateAmarilAppURL(data.params.ux)
-
+        var url = generateAmarilAppURL(data.params.ux,data.params.platform)
         // setup hit paramaters
         var params = {
             Title: data.params.hit.Title,
