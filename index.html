@@ -1568,6 +1568,13 @@
         }
       }
 
+      // add isSanbox Param:
+      url += 'IsSandbox'+'='+ (isSandbox ? 'yes' : 'no') + '&amp;'
+
+      // add configFilename Param:
+      var templateId = $('#createHIT-template-id').val();
+      url += 'ConfigFilename'+'='+ templateId + '&amp;'
+
       return url
     }
 
@@ -1777,7 +1784,7 @@
           showMessage('API Error', err.message, err);
           return;
         } else {
-
+          // TBD: BUG dont subscribe on one off payment HITs (how do we identify  them here?)
           // subscribe topic to AssignmentSubmit event :
           var HITTypeId = data.HIT.HITTypeId
 
