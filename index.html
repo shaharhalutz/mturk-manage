@@ -1573,8 +1573,9 @@
 
       // add configFilename Param:
       var templateId = $('#createHIT-template-id').val();
-      url += 'ConfigFilename'+'='+ templateId + '&amp;'
+      url += 'ConfigFilename'+'='+ templateId + '.json&amp;'
 
+      console.log('generateAmarilAppURL url:'+url)
       return url
     }
 
