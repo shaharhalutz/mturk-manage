@@ -88,6 +88,25 @@ https://console.aws.amazon.com/s3/buckets/amaril-mturk-tamplates/?region=eu-west
 
 the template file defines the following properties:
 
+
+### Text
+
+- 'InstructionCategory' - this text will be shown as the intruction of the recording stage.
+
+### Platform
+
+- 'Validate' - whether to validate the resulting transcript. (results are saved in 'MturkAssignments' table in the 'isValid' & 'validationReason' columns.)
+- 'ValidationType' - TBD.
+- 'ValidationWhiteListURL' - TBD.
+- 'RejectIfNotValid' - whether to reject the worker's assignment in case its not valid.
+- 'ApproveIfValid' - whether to approve the worker's assignment in case its not valid.
+- 'MinWlWords' - in the case when ValidationType is whiteList validation, this defines the minimum number of valid words, to be considered a valid assignment.
+- 'AgeCutoff' - over this number the audio file will be saved in a separate folder.
+- 'ApplyBonus' - whether to apply the bonus.
+- 'BonusItemsThreshold' - number of items, over which we give the bonus.
+- 'PayPerItem' - money per Item. (US$)
+- 'BonusLimit' - a cap for the bonus (bonus cant rise over this amount.)
+
 ### HIT
 see create HIT docs at: https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_CreateHITOperation.html#ApiReference_CreateHITOperation-request-parameters
 
@@ -102,21 +121,10 @@ see create HIT docs at: https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkA
 (see qualification requirements docs at:  https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_QualificationRequirementDataStructureArticle.html)
 
 ### UX
-- 'Category' - defines the instructions category, 
-    possible values are: 
-    - 'animals': animal names
-    - 'events': historical events throughout american history
-    - 'individuals': individuals throughout american history
-    - 'wars': wars throughout history
-    - 'innovations': technological innovations throughout american history
 
-- 'ExperimentName' this defines the parent folder under which the HIT's audio files are saved.
+- 'ExperimentName' - this defines the parent folder under which the HIT's audio files are saved.
     the audio file is saved in a folder as follows : 
     'ExperimentName/hitId/assignmentId/workerId_sampleRate.flac'
-
-- 'DevEnv' - defines the bucket in which the files are saved:
-    dev: 'recording_test_dev'  
-    prod: 'recordings_test'
 
 - 'DelayDuration' - defines the time in seconds in which the user is exposed to the instructions (of a specific category)
 
@@ -124,32 +132,55 @@ see create HIT docs at: https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkA
 
 - 'EnforceOnMobile' - whether or not the user is able to access this HIT's assignments from a desktop browser.
 
+- 'NoiseDetectionDbThreshold' - threshold over which the noise test fails.
+
+- 'NoiseSamplingDuration' - how many seconds do we sample noise.
+
+- 'AskExtraData' - after recording has ended as for more items that the worker may have forgoten to mention. (is saved in 'MturkAssignments' table in 'extraData' column.)
+
 (*) here is an example JSON file:  "template.example.json":
 ```javascript
 {
+    "text":{
+        "InstructionCategory": "Please name as many animals as you can."
+    },
+    "platform":{
+        "Validate":"yes",
+        "ValidationType":"WhiteList",
+        "ValidationWhiteListURL":"URL",
+        "RejectIfNotValid" : "yes",
+        "ApproveIfValid" : "no",
+        "MinWlWords" : "12",
+        "AgeCutoff" : "40",
+        "ApplyBonus" : "yes",
+        "BonusItemsThreshold" : "10",
+        "PayPerItem" : "0.01",
+        "BonusLimit" : "2"
+    },
     "ux":{
-        "Category":"events",
-        "ShowTestDuration":"no",
-        "RecordingDuration":"60",
+        "RevealRecordingDuration":"no",
+        "RecordingTime":"60",
         "DelayDuration":"6",
-        "ExperimentName":"my-experiment",
-        "AskRecordingDuration":"yes",
-        "DevEnv":"no",
-        "EnforceOnMobile":"yes"
+        "ExperimentName":"shahar-test",
+        "AskRecordingDuration":"no",
+        "EnforceOnMobile":"no",
+        "NoiseDetectionDbThreshold":"-60",
+        "NoiseSamplingDuration":"4",
+        "AskExtraData":"no"
     },
     "hit":{
-        "MaxAssignments" : "3",
+        "MaxAssignments" : "1",
         "AutoApprovalDelayInSeconds" : "259200",
         "LifetimeInSeconds" : "172800", 
-        "AssignmentDurationInSeconds" : "5400", 
-        "Reward" : "0.0",
-        "Title" : "Testing7",
+        "AssignmentDurationInSeconds" : "600", 
+        "Reward" : "0.01",
+        "Title" : "participate in an experiment - single assignment",
         "Keywords" : "data entry, typing, inspection",
-        "Description" : "Edit and Add Data from recording",
+        "Description" : "participate in an experiment while being recorded for a short while.",
         "QualificationRequirements":
             {
                 "Locale":{
-                    "locals":["ES","US"],
+                    "locals":["IL","US","ES"],
                     "actionsGuarded":"PreviewAndAccept"
                 }
             }
