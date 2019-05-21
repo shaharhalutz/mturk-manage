@@ -138,6 +138,8 @@ see create HIT docs at: https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkA
 
 - 'AskExtraData' - after recording has ended as for more items that the worker may have forgoten to mention. (is saved in 'MturkAssignments' table in 'extraData' column.)
 
+- 'ExtraDataSubmitDelay' - defines after how many seconds will be an automatic submit for the extra data form.
+
 (*) here is an example JSON file:  "template.example.json":
 ```javascript
 {
@@ -166,7 +168,8 @@ see create HIT docs at: https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkA
         "EnforceOnMobile":"no",
         "NoiseDetectionDbThreshold":"-60",
         "NoiseSamplingDuration":"4",
-        "AskExtraData":"no"
+        "AskExtraData":"no",
+        "ExtraDataSubmitDelay":"35"
     },
     "hit":{
         "MaxAssignments" : "1",
