@@ -1795,7 +1795,11 @@
             Notification: {
               Destination: 'arn:aws:sns:eu-west-1:022434321651:AssignmentSubmitted', // required 
               EventTypes: [   
-                'AssignmentSubmitted' // | AssignmentAbandoned | AssignmentReturned | AssignmentSubmitted | AssignmentRejected | AssignmentApproved | HITCreated | HITExpired | HITReviewable | HITExtended | HITDisposed | Ping,
+                 // | AssignmentAbandoned | AssignmentReturned | AssignmentSubmitted | AssignmentRejected | AssignmentApproved | HITCreated | HITExpired | HITReviewable | HITExtended | HITDisposed | Ping,
+                 'AssignmentSubmitted',
+                 'AssignmentAbandoned',
+                 'AssignmentReturned',
+                 'AssignmentAccepted',
               ],
               Transport: 'SNS',
               Version: '2014-08-15' 
