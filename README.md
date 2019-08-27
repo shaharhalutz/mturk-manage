@@ -130,6 +130,8 @@ see create HIT docs at: https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkA
 
 - 'AskRecordingDuration' - defines whether or not the user is asked for his percieved experiment duration at the end of the experiment.
 
+- 'TimeQuestionSubmitDelay' - defines after how many seconds will be an automatic submit for the Recording duration form.
+
 - 'EnforceOnMobile' - whether or not the user is able to access this HIT's assignments from a desktop browser.
 
 - 'NoiseDetectionDbThreshold' - threshold over which the noise test fails.
@@ -140,55 +142,149 @@ see create HIT docs at: https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkA
 
 - 'ExtraDataSubmitDelay' - defines after how many seconds will be an automatic submit for the extra data form.
 
+- 'CheckIsUploadDoneDelay' - defines after how many seconds will the polling to see whether file upload was completed start
+
+- 'CheckIsUploadDoneInterval' - defines the frequency of polling of whether file upload was completed.
+
+- 'CheckIsUploadDoneTimeout' - defines after how many seconds will be an automatic submit for the assignment (with or without file upload completion).
+
+- 'DevEnv' - defines whether we report errors to stack driver and documenting in entries table (devEnv = no will report and document)
+
+
 (*) here is an example JSON file:  "template.example.json":
 ```javascript
 {
+   "text":{
+      "InstructionCategory":"Please name as many specific events of the following categories:         Wars, Battles and armed conflicts.",
+      "WelcomeInstructions":"Please make sure you are in a quiet environment, and stay near the device you're using to record. In addition to your pay, the TOP 3 recordings which contain the most acceptable items will each get 5$ extra so do your best! You have only one attempt, so please make sure you are ready. Once you continue, you will be given the instructions with a short running timer. Only once it is finished, your recording will start",
+      "Consent":"Before starting, Please select your age, languages and your proficiency levels, then press Start.",
+      "Preview":"In this study, you will complete a short task. Taking part in this study is voluntary. If you withdraw at any time, you will receive no monetary compensation, otherwise, you will receive the amount specified in the description of the study. If you agree to participate, please accept and answer the following questions",
+      "DurationQuestion": "Please Guess, How long has it been since the beginning of the recording ?",
+      "Quiz":{
+         "TimeToAnswer":"5",
+         "PassThreshold":"1",
+         "Title":"myQuiz",
+         "Instructions":"please answer the following questions, you have 5 seconds for each question, if you pass the quiz you may continue to participate in the experiment.",
+         "Questions":[
+            {
+               "title":"QuizTitle1",
+               "whiteList":[
+                  "yo",
+                  "yo",
+                  "ma"
+               ]
+            },
+            {
+               "title":"QuizTitle2",
+               "whiteList":[
+                  "yo",
+                  "yo",
+                  "ma"
+               ]
+            },
+            {
+               "title":"QuizTitle3",
+               "whiteList":[
+                  "ho",
+                  "no",
+                  "bo"
+               ]
+            }
+
+         ]
+      }  
+   },
+   "platform":{
+      "Validate":"no",
+      "ValidationType":"WhiteList",
+      "ValidationWhiteListURL":"URL",
+      "RejectIfNotValid":"yes",
+      "ApproveIfValid":"yes",
+      "MinWlWords":"0",
+      "AgeCutoff":"40",
+      "ApplyBonus": "no",
+      "BonusItemsThreshold":"5",
+      "PayPerItem":"0.01",
+      "BonusLimit":"2.0"
+   }, 
+   "ux":{
+      "DevEnv":"no",
+      "RevealRecordingDuration":"no",
+      "RecordingTime":"60",
+      "DelayDuration":"6",
+      "ExperimentName":"wars2",
+      "AskRecordingDuration":"yes",
+      "EnforceOnMobile":"no",
+      "NoiseDetectionDbThreshold":"30",
+      "NoiseSamplingDuration":"2",
+      "AskExtraData":"no",
+      "ExtraDataSubmitDelay":"35",
+      "AgeCutoff":"40",
+      "TimeQuestionSubmitDelay":"10",
+      "CheckIsUploadDoneDelay":"90",
+      "CheckIsUploadDoneInterval":"10",
+      "CheckIsUploadDoneTimeout":"120"
+   },
+   "hit":{
+      "MaxAssignments":"2",
+      "AutoApprovalDelayInSeconds":"90",
+      "LifetimeInSeconds":"1728000",
+      "AssignmentDurationInSeconds":"600",
+      "Reward":"0.05",
+      "Title":"Name as many as you can",
+      "Keywords":"data entry, typing, inspection",
+      "Description":"participate in an experiment while being recorded for a short while.",
+      "QualificationRequirements":{
+         "Locale":{
+            "locals":[
+               "US"
+            ],
+            "actionsGuarded":"PreviewAndAccept"
+         }
+      }
+   }
+}
+
+```
+
+(*) here are the defualt values in the cases where such exist:
+```javascript
+{
     "text":{
-        "InstructionCategory": "Please name as many animals as you can."
+       "InstructionCategory":"Please Name as many animals as you can.",
+       "WelcomeInstructions":"Please make sure you are in a quiet envirounment, and hold the phone close to your lips. Before starting, Please select your age, languages and the level in which you speak them, then press Continue. You will be paid an ADDITIONAL BONUS payment according to the amount of acceptable items you provide. You have only one attempt, so please make sure you are ready.",
+       "Consent":"In this study, you will complete a short - one minute - task. Taking part in this study is voluntary. If you withdraw at any time, you will receive no monetary compensation, otherwise, you will receive the amount specified in the description of the study. If you agree to participate, you will be asked to answer the following questions:",
+       "Preview":"Please make sure you are in a quiet envirounment, and hold the phone close to your lips. You will be paid an ADDITIONAL BONUS payment according to the amount of acceptable items you provide. Pou have only one attempt, so please make sure you are ready before starting.",
+       "DurationQuestion":  "Please Guess, How long has passed since the beginning of the recording ?",
     },
     "platform":{
-        "Validate":"yes",
-        "ValidationType":"WhiteList",
-        "ValidationWhiteListURL":"URL",
-        "RejectIfNotValid" : "yes",
-        "ApproveIfValid" : "no",
-        "MinWlWords" : "12",
-        "AgeCutoff" : "40",
-        "ApplyBonus" : "yes",
-        "BonusItemsThreshold" : "10",
-        "PayPerItem" : "0.01",
-        "BonusLimit" : "2"
-    },
+  
+    }, 
     "ux":{
-        "RevealRecordingDuration":"no",
-        "RecordingTime":"60",
-        "DelayDuration":"6",
-        "ExperimentName":"shahar-test",
-        "AskRecordingDuration":"no",
-        "EnforceOnMobile":"no",
-        "NoiseDetectionDbThreshold":"-60",
-        "NoiseSamplingDuration":"4",
-        "AskExtraData":"no",
-        "ExtraDataSubmitDelay":"35"
+       "DevEnv":"no",
+       "RevealRecordingDuration":"no",
+       "RecordingTime":"60",
+       "DelayDuration":"6",
+       "ExperimentName":"Sandbox__test",
+       "AskRecordingDuration":"no",
+       "EnforceOnMobile":"no",
+       "NoiseDetectionDbThreshold":"20",
+       "NoiseSamplingDuration":"4",
+       "AskExtraData":"no",
+       "ExtraDataSubmitDelay":"30",
+       "AgeCutoff":"40",
+       "TimeQuestionSubmitDelay":"10",
+       "CheckIsUploadDoneDelay":"90",
+       "CheckIsUploadDoneInterval":"10",
+       "CheckIsUploadDoneTimeout":"120",
+       "QuizPassThreshold":"2",
+       "QuizTimeToAnswer":"15"
     },
     "hit":{
-        "MaxAssignments" : "1",
-        "AutoApprovalDelayInSeconds" : "259200",
-        "LifetimeInSeconds" : "172800", 
-        "AssignmentDurationInSeconds" : "600", 
-        "Reward" : "0.01",
-        "Title" : "participate in an experiment - single assignment",
-        "Keywords" : "data entry, typing, inspection",
-        "Description" : "participate in an experiment while being recorded for a short while.",
-        "QualificationRequirements":
-            {
-                "Locale":{
-                    "locals":["IL","US","ES"],
-                    "actionsGuarded":"PreviewAndAccept"
-                }
-            }
+
     }
-}
+ }
+ 
 ```
     
 ## Manage HITs
