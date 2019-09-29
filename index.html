@@ -1736,7 +1736,7 @@
         ret(data, d.return);
         return;
       } else {
-
+        console.log('data.params:',data.params)
         var url = generateAmarilAppURL(data.params.ux,data.params.platform)
         // setup hit paramaters
         var params = {
@@ -2567,9 +2567,16 @@
               // add to templates dropdown menu:
               $('#createHIT-template-id').append($('<option>', {value:filename, text:filename})); 
               $('#createHIT-template-id').val(filename);
-              __templates[filename] = JSON.parse(contents)
+              try {
+                __templates[filename] = JSON.parse(contents)
 
+              } catch (error) {
+                console.log('error parsing json:',filename,error)
+                callback();
+                return
+              }
               callback();
+
             }
           });
         }, function(err) {
